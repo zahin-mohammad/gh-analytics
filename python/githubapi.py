@@ -19,14 +19,12 @@ class GitHubAPI:
         self.TOKEN = access_token
         self.RATE_LIMIT = 5000
         self.updateRateLimitInfo()
-
-    def rateLimitInfo(self):
-        url = GITHUB_BASE_URL + (GET_USERS % (self.USER))
-        return requests.get(url, auth=(self.USER, self.TOKEN))
     
     def updateRateLimitInfo(self):
         try:
-            rateLimitInfo = dict(self.rateLimitInfo().headers)
+            url = GITHUB_BASE_URL + (GET_USERS % (self.USER))
+            response = requests.get(url, auth=(self.USER, self.TOKEN))
+            rateLimitInfo = dict(response.headers)
             self.rateLimitRemaining = int(rateLimitInfo["X-RateLimit-Remaining"])
             self.rateLimitReset = int(rateLimitInfo["X-RateLimit-Reset"])
         except:
