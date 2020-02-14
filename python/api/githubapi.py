@@ -2,17 +2,9 @@ import requests
 import time
 import os
 from requests.auth import HTTPDigestAuth
+from . import constants
 
 # TODO: Make a wrapper class
-LOGFILE = "log.txt"
-
-GITHUB_BASE_URL = "https://api.github.com"
-GET_EVENTS = "/events"
-GET_USERS = "/users/%s" # .../:user
-GET_COMMIT_COMMENTS = "/repos/%s/%s/comments" # .../:owner/:repo/...
-GET_COMMENT_REACTION = "/repos/%s/%s/comments/%s/reactions" # .../:owner/:repo/.../:comment_id/...
-REACTION_HEADER ={'Accept': 'application/vnd.github.squirrel-girl-preview+json'}
-
 class GitHubAPI:
     def __init__(self, user, access_token):
         self.USER = user
@@ -22,7 +14,7 @@ class GitHubAPI:
     
     def updateRateLimitInfo(self):
         try:
-            url = GITHUB_BASE_URL + (GET_USERS % (self.USER))
+            url = constants.GITHUB_BASE_URL + (constants.GET_USERS % (self.USER))
             response = requests.get(url, auth=(self.USER, self.TOKEN))
             rateLimitInfo = dict(response.headers)
             self.rateLimitRemaining = int(rateLimitInfo["X-RateLimit-Remaining"])
@@ -66,11 +58,11 @@ class GitHubAPI:
         return requests.get(url, params, **kwargs)
 
     def log(self, logMessage):
-        if os.path.exists(LOGFILE):
+        if os.path.exists(constants.LOGFILE):
             append_write = 'a' # append if already exists
         else:
             append_write = 'w' # make a new file if not
         
-        with open(LOGFILE, append_write) as f:
+        with open(constants.LOGFILE, append_write) as f:
             f.write(logMessage)
 

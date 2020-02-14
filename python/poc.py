@@ -1,16 +1,15 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import traceback
-from githubapi import GitHubAPI
-
-
 import json
-from key import *  
+from key import * 
+from api.githubapi import GitHubAPI
 
 USER = "zahin-mohammad"
 TOKEN = GITHUB_PERSONAL_ACCESS_TOKEN
 
 gitHubAPI = GitHubAPI(USER, TOKEN)
+print(gitHubAPI.USER)
 print(gitHubAPI.rateLimitRemaining)
 
 
