@@ -1,5 +1,5 @@
 python/key.py
 python/venv
 .vscode
-python/__pycache__
-python/log.txt
+*.pyc
+log.txt
