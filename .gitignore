@@ -1,4 +1,4 @@
-key.py
-venv
+python/key.py
+python/venv
 .vscode
-__pycache__
+python/__pycache__
