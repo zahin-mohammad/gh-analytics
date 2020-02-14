@@ -1,8 +1,11 @@
 import requests
 import time
+import os
 from requests.auth import HTTPDigestAuth
 
 # TODO: Make a wrapper class
+LOGFILE = "log.txt"
+
 GITHUB_BASE_URL = "https://api.github.com"
 GET_EVENTS = "/events"
 GET_USERS = "/users/%s" # .../:user
@@ -53,10 +56,23 @@ class GitHubAPI:
                     return self.requestWithRetry(retryCount-1, method, url, params=None, **kwargs)
                 return response
             except requests.exceptions.RequestException as e:
+                self.log(e)
                 if retryCount > 0:
-                    return self.requestWithRetry(retryCount-1, method, url, params=None, **kwargs) 
-        raise Exception(f'Retry failed for {method} {url} {params}')
+                    return self.requestWithRetry(retryCount-1, method, url, params=None, **kwargs)
+        e = Exception(f'Retry failed for {method} {url} {params}')
+        self.log(e)
+        raise e
 
 
     def get(self, url, params=None, **kwargs):
         return requests.get(url, params, **kwargs)
+
+    def log(self, logMessage):
+        if os.path.exists(LOGFILE):
+            append_write = 'a' # append if already exists
+        else:
+            append_write = 'w' # make a new file if not
+        
+        with open(LOGFILE, append_write) as f:
+            f.write(logMessage)
+
